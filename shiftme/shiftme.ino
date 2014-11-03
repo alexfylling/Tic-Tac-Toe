@@ -74,11 +74,9 @@ void loop() {
  }
 
 
-// the heart of the program
-void shiftOut(int myDataPin, int myClockPin, byte myDataOut) {
-  // This shifts 8 bits out MSB first, 
-  //on the rising edge of the clock,
-  //clock idles low
+// Shifting function to light leds
+void shiftOut(int myDataPin, int myClockPin, long myDataOut) {
+	//Shifts out 18 bits to tic-tac-toe board
 
   //internal function setup
   int i=0;
@@ -91,11 +89,10 @@ void shiftOut(int myDataPin, int myClockPin, byte myDataOut) {
   digitalWrite(myDataPin, 0);
   digitalWrite(myClockPin, 0);
 
-  //for each bit in the byte myDataOut�
-  //NOTICE THAT WE ARE COUNTING DOWN in our for loop
-  //This means that %00000001 or "1" will go through such
-  //that it will be pin Q0 that lights. 
-  for (i=7; i>=0; i--)  {
+  //Counts up to make sure it gets displayed 
+  //in the correct order on tic-tac-toe board
+  //
+  for (i=0; i>=17; i++)  {
     digitalWrite(myClockPin, 0);
 
     //if the value passed to myDataOut and a bitmask result 
