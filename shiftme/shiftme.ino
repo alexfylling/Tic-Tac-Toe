@@ -92,7 +92,7 @@ void shiftOut(int myDataPin, int myClockPin, long myDataOut) {
   //Counts up to make sure it gets displayed 
   //in the correct order on tic-tac-toe board
   //
-  for (i=0; i>=17; i++)  {
+  for (i=0; i<=17; i++)  {
     digitalWrite(myClockPin, 0);
 
     //if the value passed to myDataOut and a bitmask result 
