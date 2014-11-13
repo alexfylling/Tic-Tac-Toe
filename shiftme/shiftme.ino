@@ -1,25 +1,42 @@
 //Pin connected to ST_CP of 74HC595
-int latchPin = 9;
+const int latchPin = 9;
 //Pin connected to SH_CP of 74HC595
-int clockPin = 8;
+const int clockPin = 8;
 ////Pin connected to DS of 74HC595
-int dataPin = 10;
+const int dataPin = 10;
 
-long testLol[9] = {0x020001, 0x010002, 0x08004, 0x04008, 0x02010, 0x01020, 0x0840, 0x0480, 0x0300};
+const int btn1 = 1;
+const int btn2 = 2;
+const int btn3 = 3;
+const int btn4 = 4;
+
+const int d_UP = 1;
+const int d_DOWN = 2;
+const int d_LEFT = 3;
+const int d_RIGHT = 4;
+
+const int curPlayer = 1;
+
+int cursPos = 0x01;
+int gameGrid = 0x00;
+
+long testLol[] = {1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192};
 
 void setup() {
   //set pins to output because they are addressed in the main loop
   pinMode(latchPin, OUTPUT);
+  pinMode(btn1, INPUT);
+  pinMode(btn2, INPUT);
+  pinMode(btn3, INPUT);
+  pinMode(btn4, INPUT);
   Serial.begin(9600);
 }
 
 void loop() {
-    for(int i = 0; i < 9; i++){
-		shiftOut(dataPin, clockPin, testLol[i]);
-		delay(100);
-	}
- }
-
+		
+			shiftOut(dataPin, clockPin, random(0, 262143));
+			delay(100);
+}
 // Shifting function to light leds
 void shiftOut(int myDataPin, int myClockPin, long myDataOut) {
 	//Shifts out 18 bits to board
@@ -60,4 +77,62 @@ void shiftOut(int myDataPin, int myClockPin, long myDataOut) {
   digitalWrite(myClockPin, 0);
   digitalWrite(latchPin, 1);
   Serial.println();
+}
+
+int buttonPush(){
+	int result = 0;
+	if(digitalRead(btn1) == HIGH){
+		result = 1;
+	}
+	else if(digitalRead(btn2) == HIGH){
+		result = 2;
+	}
+	else if(digitalRead(btn3) == HIGH){
+		result = 3;
+	}
+	else if(digitalRead(btn4) == HIGH){
+		result = 4;
+	}
+	return result;
+}
+
+void moveCursor(int dir){
+		switch(dir){
+		//Move up
+			case d_UP:
+				//If not on top row
+				if(!(cursPos == 0 || cursPos == 1 || cursPos == 2)){
+					cursPos -= 3;
+				}
+			break;
+			
+			case d_DOWN:
+				//If not on bottom row
+				if(!(cursPos == 6 || cursPos == 7 || cursPos == 8)){
+					cursPos += 3;
+				}
+			break;
+			
+				
+			case d_LEFT:
+				//If not in top left corner
+				if(!(cursPos == 0){
+					cursPos -= 1;
+				}
+			break;
+			
+			case d_RIGHT:
+				//If not in bottom right corner
+				if(!(cursPos == 8 /*&& !(gameGrid & 1<<cursPos+1) )*/){
+					cursPos += 1;
+				}
+			break;
+			
+			default:
+			//Maybe something, dunno yet
+			break;
+		}			
+}
+
+void drawCursor(int pos, int player){
 }
